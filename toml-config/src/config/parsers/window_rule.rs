@@ -124,3 +124,41 @@ impl Parser for WindowRulesParser<'_, '_> {
         Ok(res)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::config::WindowRule;
+    use crate::config::context::Context;
+    use crate::config::parsers::window_rule::WindowRuleParser;
+    use crate::toml::toml_parser;
+    use ahash::AHashMap;
+    use jay_config::window::TileState;
+    use std::cell::RefCell;
+
+    fn parse(input: &[u8]) -> WindowRule {
+        let mark_names = RefCell::new(AHashMap::new());
+        let mut workspaces = AHashMap::new();
+        let cx = Context {
+            input,
+            used: Default::default(),
+            mark_names: &mark_names,
+            workspaces: RefCell::new(&mut workspaces),
+        };
+        let toml = toml_parser::parse(input, &cx).unwrap();
+        toml.parse(&mut WindowRuleParser(&cx)).unwrap()
+    }
+
+    #[test]
+    fn basic_rule() {
+        let rule = parse(b"name = \"r\"\n");
+        assert_eq!(rule.name.as_deref(), Some("r"));
+    }
+
+    #[test]
+    fn all_fields() {
+        let rule = parse(b"name = \"r\"\nauto-focus = false\ninitial-tile-state = \"floating\"\n");
+        assert_eq!(rule.name.as_deref(), Some("r"));
+        assert_eq!(rule.auto_focus, Some(false));
+        assert_eq!(rule.initial_tile_state, Some(TileState::Floating));
+    }
+}

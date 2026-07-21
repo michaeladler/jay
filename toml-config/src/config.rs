@@ -226,6 +226,9 @@ pub enum Action {
     HideOverlay {
         ws: Rc<WorkspaceSlot>,
     },
+    SetFloatingBorderWidth {
+        width: Option<i32>,
+    },
 }
 
 #[derive(Debug)]

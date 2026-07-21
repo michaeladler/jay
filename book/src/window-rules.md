@@ -478,6 +478,15 @@ initial-tile-state = "floating"
 auto-focus = false
 ```
 
+### Remove Borders from a Floating Window
+
+```toml
+[[windows]]
+match.title = "Albert"
+initial-tile-state = "floating"
+action = { type = "set-floating-border-width", width = 0 }
+```
+
 ## Introspection
 
 Jay provides several ways to discover the property values you need for writing

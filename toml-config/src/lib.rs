@@ -594,6 +594,14 @@ impl Action {
                 let workspace = ws.ws.get();
                 b.new(move || workspace.hide())
             }
+            Action::SetFloatingBorderWidth { width } => {
+                let state = state.clone();
+                b.new(move || {
+                    if let Some(Some(window)) = state.window.get() {
+                        window.set_floating_border_width(width);
+                    }
+                })
+            }
         }
     }
 }

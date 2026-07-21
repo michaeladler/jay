@@ -499,6 +499,7 @@ pub struct ToplevelData {
     pub session: CloneCell<Option<Rc<ToplevelSession>>>,
     pub is_root_container: Cell<bool>,
     pub is_overlay_root_container: Cell<bool>,
+    pub floating_border_width: Cell<Option<i32>>,
 }
 
 impl ToplevelData {
@@ -561,6 +562,7 @@ impl ToplevelData {
             session: Default::default(),
             is_root_container: Default::default(),
             is_overlay_root_container: Default::default(),
+            floating_border_width: Default::default(),
         }
     }
 

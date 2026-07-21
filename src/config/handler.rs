@@ -2718,6 +2718,22 @@ impl ConfigProxyHandler {
         Ok(())
     }
 
+    fn handle_set_window_floating_border_width(
+        &self,
+        window: Window,
+        border_width: Option<i32>,
+    ) -> Result<(), CphError> {
+        let window = self.get_window(window)?;
+        let tl_data = window.tl_data();
+        tl_data
+            .floating_border_width
+            .set(border_width.map(|w| w.max(0)));
+        if let Some(float) = tl_data.float.get() {
+            float.schedule_layout();
+        }
+        Ok(())
+    }
+
     fn handle_set_window_matcher_initial_tile_state(
         &self,
         matcher: WindowMatcher,
@@ -3814,6 +3830,12 @@ impl ConfigProxyHandler {
             } => self
                 .handle_set_window_matcher_auto_focus(matcher, auto_focus)
                 .wrn("set_window_matcher_auto_focus")?,
+            ClientMessage::SetWindowFloatingBorderWidth {
+                window,
+                border_width,
+            } => self
+                .handle_set_window_floating_border_width(window, border_width)
+                .wrn("set_window_floating_border_width")?,
             ClientMessage::SetWindowMatcherInitialTileState {
                 matcher,
                 tile_state,

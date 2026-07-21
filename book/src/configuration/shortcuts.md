@@ -615,3 +615,9 @@ The parameterized `resize` action also applies to the matched window.
 
 Similarly, `kill-client` applies to the matched window's client in a window
 rule, or to the matched client in a client rule.
+
+The `set-floating-border-width` action is available only in window rules. It
+sets the border width of a floating window. The `width` field is an integer
+number of pixels. If `width` is omitted, the compositor default (theme border
+width) is used. A value of `0` disables borders. Positive values override the
+theme border width.

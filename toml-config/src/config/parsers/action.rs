@@ -630,6 +630,16 @@ impl ActionParser<'_, '_> {
         let ws = self.0.get_workspace_slot(name.value);
         Ok(Action::HideOverlay { ws })
     }
+
+    fn parse_set_floating_border_width(
+        &mut self,
+        ext: &mut Extractor<'_, '_>,
+    ) -> ParseResult<Self> {
+        let (width,) = ext.extract((opt(s32("width")),))?;
+        Ok(Action::SetFloatingBorderWidth {
+            width: width.despan(),
+        })
+    }
 }
 
 struct ShowWorkspaceDefaults {
@@ -701,6 +711,7 @@ impl Parser for ActionParser<'_, '_> {
             "hide-overlay" => self.parse_hide_overlay(&mut ext),
             "show-overlay" => self.parse_show_overlay(&mut ext),
             "toggle-overlay" => self.parse_toggle_overlay(&mut ext),
+            "set-floating-border-width" => self.parse_set_floating_border_width(&mut ext),
             v => {
                 ext.ignore_unused();
                 return Err(ActionParserError::UnknownType(v.to_string()).spanned(ty.span));

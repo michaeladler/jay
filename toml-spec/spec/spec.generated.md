@@ -1062,6 +1062,25 @@ This table is a tagged union. The variant is determined by the `type` field. It 
 
     The value of this field should be a string.
 
+- `set-floating-border-width`:
+
+  Sets the border width of a floating window.
+  
+  If `width` is omitted, the compositor default is used. A value of `0` disables
+  borders. Positive values override the theme border width.
+
+  The table has the following fields:
+
+  - `width` (optional):
+
+    The border width in pixels.
+
+    The value of this field should be a number.
+
+    The numbers should be integers.
+
+    The numbers should be greater than or equal to 0.
+
 
 <a name="types-BarPosition"></a>
 ### `BarPosition`

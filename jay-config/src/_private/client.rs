@@ -2155,6 +2155,13 @@ impl ConfigClient {
         });
     }
 
+    pub fn set_window_floating_border_width(&self, window: Window, border_width: Option<i32>) {
+        self.send(&ClientMessage::SetWindowFloatingBorderWidth {
+            window,
+            border_width,
+        });
+    }
+
     pub fn set_window_matcher_initial_tile_state(
         &self,
         matcher: WindowMatcher,

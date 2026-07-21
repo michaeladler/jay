@@ -1008,6 +1008,10 @@ pub enum ClientMessage<'a> {
     GetPlaneColorPipelinesEnabled {
         device: DrmDevice,
     },
+    SetWindowFloatingBorderWidth {
+        window: Window,
+        border_width: Option<i32>,
+    },
 }
 
 #[derive(Serialize, Deserialize, Debug)]

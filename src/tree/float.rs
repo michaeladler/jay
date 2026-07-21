@@ -227,6 +227,16 @@ impl FloatNode {
         self.schedule_render_titles();
     }
 
+    fn border_width(&self, tl: TreeTimeline) -> i32 {
+        let ns = &self.node_state[tl];
+        if let Some(child) = ns.child.get() {
+            if let Some(bw) = child.tl_data().floating_border_width.get() {
+                return bw;
+            }
+        }
+        self.state.theme.sizes.border_width.get(tl)
+    }
+
     pub fn schedule_layout(self: &Rc<Self>) {
         if !self.layout_scheduled.replace(true) {
             self.state.pending_float_layout.push(self.clone());
@@ -241,7 +251,7 @@ impl FloatNode {
         };
         let pos = ns.position.get();
         let theme = &self.state.theme;
-        let bw = theme.sizes.border_width.get(LiveTL);
+        let bw = self.border_width(LiveTL);
         let th = theme.title_height(LiveTL);
         let tpuh = theme.title_plus_underline_height(LiveTL);
         let cpos = Rect::new_sized_saturating(
@@ -327,7 +337,7 @@ impl FloatNode {
     fn render_title_phase2(&self) {
         let theme = &self.state.theme;
         let th = theme.title_height(RenderTL);
-        let bw = theme.sizes.border_width.get(RenderTL);
+        let bw = self.border_width(RenderTL);
         let title = self.title.borrow();
         let tt = &*self.title_textures.borrow();
         for (_, tt) in tt {
@@ -355,7 +365,7 @@ impl FloatNode {
         let x = x.round_down();
         let y = y.round_down();
         let theme = &self.state.theme;
-        let bw = theme.sizes.border_width.get(LiveTL);
+        let bw = self.border_width(LiveTL);
         let tpuh = theme.title_plus_underline_height(LiveTL);
         let mut seats = self.cursors.borrow_mut();
         let seat_state = seats.entry(id).or_insert_with(|| CursorState {
@@ -531,7 +541,7 @@ impl FloatNode {
         if pos.intersects(&opos) {
             return;
         }
-        let bw = self.state.theme.sizes.border_width.get(LiveTL);
+        let bw = self.border_width(LiveTL);
         let th = self.state.theme.title_height(LiveTL);
         let mut x1 = pos.x1();
         let mut x2 = pos.x2();
@@ -657,7 +667,7 @@ impl FloatNode {
             _ => return,
         };
         let ns = &self.node_state[LiveTL];
-        let bw = self.state.theme.sizes.border_width.get(LiveTL);
+        let bw = self.border_width(LiveTL);
         let th = self.state.theme.title_height(LiveTL);
         let mut is_icon_press = false;
         if pressed && cursor_data.x >= bw && cursor_data.y >= bw && cursor_data.y < bw + th {
@@ -756,8 +766,7 @@ impl FloatNode {
     ) -> Option<TileDragDestination> {
         let ns = &self.node_state[LiveTL];
         let child = ns.child.get()?;
-        let theme = &self.state.theme.sizes;
-        let bw = theme.border_width.get(LiveTL);
+        let bw = self.border_width(LiveTL);
         let tpuh = self.state.theme.title_plus_underline_height(LiveTL);
         let pos = ns.position.get();
         let body = Rect::new(
@@ -891,8 +900,8 @@ impl NodeBase for FloatNode {
     ) -> FindTreeResult {
         let theme = &self.state.theme;
         let tpuh = theme.title_plus_underline_height(LiveTL);
-        let bw = theme.sizes.border_width.get(LiveTL);
         let ns = &self.node_state[LiveTL];
+        let bw = self.border_width(LiveTL);
         let pos = ns.position.get();
         if x < bw || x >= pos.width() - bw {
             return FindTreeResult::AcceptsInput;
@@ -1101,9 +1110,9 @@ impl ContainingNode for FloatNode {
     fn cnode_set_child_position(self: Rc<Self>, _child: &dyn Node, x: i32, y: i32) {
         let theme = &self.state.theme;
         let tpuh = theme.title_plus_underline_height(LiveTL);
-        let bw = theme.sizes.border_width.get(LiveTL);
-        let (x, y) = (x - bw, y - tpuh - bw);
         let ns = &self.node_state[LiveTL];
+        let bw = self.border_width(LiveTL);
+        let (x, y) = (x - bw, y - tpuh - bw);
         let pos = ns.position.get();
         if pos.position() != (x, y) {
             let new_pos = pos.at_point(x, y);
@@ -1122,8 +1131,8 @@ impl ContainingNode for FloatNode {
     ) {
         let theme = &self.state.theme;
         let tpuh = theme.title_plus_underline_height(LiveTL);
-        let bw = theme.sizes.border_width.get(LiveTL);
         let ns = &self.node_state[LiveTL];
+        let bw = self.border_width(LiveTL);
         let pos = ns.position.get();
         let mut x1 = pos.x1();
         let mut x2 = pos.x2();

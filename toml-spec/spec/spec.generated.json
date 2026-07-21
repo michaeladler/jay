@@ -727,6 +727,23 @@
                 "type",
                 "name"
               ]
+            },
+            {
+              "description": "Sets the border width of a floating window.\n\nIf `width` is omitted, the compositor default is used. A value of `0` disables\nborders. Positive values override the theme border width.\n",
+              "type": "object",
+              "properties": {
+                "type": {
+                  "const": "set-floating-border-width"
+                },
+                "width": {
+                  "type": "integer",
+                  "description": "The border width in pixels.",
+                  "minimum": 0.0
+                }
+              },
+              "required": [
+                "type"
+              ]
             }
           ]
         }

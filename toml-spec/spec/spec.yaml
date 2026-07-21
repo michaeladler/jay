@@ -988,6 +988,19 @@ Action:
               description: The name of the overlay.
               required: true
               kind: string
+        set-floating-border-width:
+          description: |
+            Sets the border width of a floating window.
+
+            If `width` is omitted, the compositor default is used. A value of `0` disables
+            borders. Positive values override the theme border width.
+          fields:
+            width:
+              description: The border width in pixels.
+              required: false
+              kind: number
+              integer_only: true
+              minimum: 0
 
 
 Exec:

@@ -241,6 +241,14 @@ impl Window {
     pub fn resize(self, dx1: i32, dy1: i32, dx2: i32, dy2: i32) {
         get!().resize_window(self, dx1, dy1, dx2, dy2);
     }
+
+    /// Sets the border width of this floating window.
+    ///
+    /// A value of `None` uses the compositor default. A value of `0` disables
+    /// borders. Positive values override the theme border width.
+    pub fn set_floating_border_width(self, border_width: Option<i32>) {
+        get!().set_window_floating_border_width(self, border_width);
+    }
 }
 
 /// A window matcher.
