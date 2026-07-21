@@ -349,6 +349,9 @@ impl Rule for WindowRule {
         if let Some(auto_focus) = self.auto_focus {
             matcher.set_auto_focus(auto_focus);
         }
+        if let Some(border_width) = self.border_width {
+            matcher.set_border_width(Some(border_width));
+        }
         if let Some(tile_state) = self.initial_tile_state {
             matcher.set_initial_tile_state(tile_state);
         }

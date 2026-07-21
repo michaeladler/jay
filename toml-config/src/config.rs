@@ -351,6 +351,7 @@ pub struct WindowRule {
     pub action: Option<Action>,
     pub latch: Option<Action>,
     pub auto_focus: Option<bool>,
+    pub border_width: Option<i32>,
     pub initial_tile_state: Option<TileState>,
 }
 

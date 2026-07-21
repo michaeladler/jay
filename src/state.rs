@@ -1986,6 +1986,10 @@ impl State {
         self.config.get()?.initial_tile_state(data)
     }
 
+    pub fn border_width(&self, data: &ToplevelData) -> Option<i32> {
+        self.config.get().and_then(|c| c.border_width(data))
+    }
+
     pub fn update_capabilities(
         &self,
         data: &Rc<Client>,

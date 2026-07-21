@@ -344,6 +344,16 @@ impl WindowCriterion<'_> {
         self.to_matcher().set_auto_focus(auto_focus);
     }
 
+    /// Sets the border width of newly mapped windows that match this criterion.
+    ///
+    /// A value of `None` uses the compositor default. A value of `0` disables
+    /// borders. Positive values override the theme border width.
+    ///
+    /// This leaks the matcher.
+    pub fn set_border_width(self, border_width: Option<i32>) {
+        self.to_matcher().set_border_width(border_width);
+    }
+
     /// Sets whether newly mapped windows that match this matcher are mapped tiling or
     /// floating.
     ///
@@ -377,6 +387,14 @@ impl WindowMatcher {
     /// automatically focused.
     pub fn set_auto_focus(self, auto_focus: bool) {
         get!().set_window_matcher_auto_focus(self, auto_focus);
+    }
+
+    /// Sets the border width of newly mapped windows that match this matcher.
+    ///
+    /// A value of `None` uses the compositor default. A value of `0` disables
+    /// borders. Positive values override the theme border width.
+    pub fn set_border_width(self, border_width: Option<i32>) {
+        get!().set_window_matcher_border_width(self, border_width);
     }
 
     /// Sets whether newly mapped windows that match this matcher are mapped tiling or

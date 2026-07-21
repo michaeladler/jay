@@ -2743,6 +2743,11 @@
           "type": "boolean",
           "description": "Whether newly mapped windows that match this rule get the keyboard focus.\n\nIf a window matches any rule for which this is false, the window will not be\nautomatically focused.\n"
         },
+        "border-width": {
+          "type": "integer",
+          "description": "The border width of newly mapped windows that match this rule.\n\nIf omitted, the compositor default is used. A value of `0` disables\nborders. Positive values override the theme border width.\n",
+          "minimum": 0.0
+        },
         "initial-tile-state": {
           "description": "Specifies if the window is initially mapped tiled or floating.",
           "$ref": "#/$defs/TileState"

@@ -6,6 +6,7 @@ use crate::config::extractor::ExtractorError;
 use crate::config::extractor::bol;
 use crate::config::extractor::opt;
 use crate::config::extractor::recover;
+use crate::config::extractor::s32;
 use crate::config::extractor::str;
 use crate::config::extractor::val;
 use crate::config::parser::DataType;
@@ -52,15 +53,23 @@ impl Parser for WindowRuleParser<'_, '_> {
         table: &IndexMap<Spanned<String>, Spanned<Value>>,
     ) -> ParseResult<Self> {
         let mut ext = Extractor::new(self.0, span, table);
-        let (name, match_val, action_val, latch_val, auto_focus, initial_tile_state_val) = ext
-            .extract((
-                opt(str("name")),
-                opt(val("match")),
-                opt(val("action")),
-                opt(val("latch")),
-                recover(opt(bol("auto-focus"))),
-                opt(val("initial-tile-state")),
-            ))?;
+        let (
+            name,
+            match_val,
+            action_val,
+            latch_val,
+            auto_focus,
+            border_width,
+            initial_tile_state_val,
+        ) = ext.extract((
+            opt(str("name")),
+            opt(val("match")),
+            opt(val("action")),
+            opt(val("latch")),
+            recover(opt(bol("auto-focus"))),
+            recover(opt(s32("border-width"))),
+            opt(val("initial-tile-state")),
+        ))?;
         let mut action = None;
         if let Some(value) = action_val {
             action = Some(
@@ -99,6 +108,7 @@ impl Parser for WindowRuleParser<'_, '_> {
             action,
             latch,
             auto_focus: auto_focus.despan(),
+            border_width: border_width.despan(),
             initial_tile_state,
         })
     }
@@ -122,5 +132,58 @@ impl Parser for WindowRulesParser<'_, '_> {
             }
         }
         Ok(res)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::config::WindowRule;
+    use crate::config::context::Context;
+    use crate::config::parsers::window_rule::WindowRuleParser;
+    use crate::toml::toml_parser;
+    use ahash::AHashMap;
+    use jay_config::window::TileState;
+    use std::cell::RefCell;
+
+    fn parse(input: &[u8]) -> WindowRule {
+        let mark_names = RefCell::new(AHashMap::new());
+        let mut workspaces = AHashMap::new();
+        let cx = Context {
+            input,
+            used: Default::default(),
+            mark_names: &mark_names,
+            workspaces: RefCell::new(&mut workspaces),
+        };
+        let toml = toml_parser::parse(input, &cx).unwrap();
+        toml.parse(&mut WindowRuleParser(&cx)).unwrap()
+    }
+
+    #[test]
+    fn border_width_omitted_is_none() {
+        let rule = parse(b"name = \"r\"\n");
+        assert_eq!(rule.border_width, None);
+    }
+
+    #[test]
+    fn border_width_zero() {
+        let rule = parse(b"border-width = 0\n");
+        assert_eq!(rule.border_width, Some(0));
+    }
+
+    #[test]
+    fn border_width_override() {
+        let rule = parse(b"border-width = 8\n");
+        assert_eq!(rule.border_width, Some(8));
+    }
+
+    #[test]
+    fn all_fields() {
+        let rule = parse(
+            b"name = \"r\"\nauto-focus = false\nborder-width = 0\ninitial-tile-state = \"floating\"\n",
+        );
+        assert_eq!(rule.name.as_deref(), Some("r"));
+        assert_eq!(rule.auto_focus, Some(false));
+        assert_eq!(rule.border_width, Some(0));
+        assert_eq!(rule.initial_tile_state, Some(TileState::Floating));
     }
 }

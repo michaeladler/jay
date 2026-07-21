@@ -6092,6 +6092,19 @@ The table has the following fields:
 
   The value of this field should be a boolean.
 
+- `border-width` (optional):
+
+  The border width of newly mapped windows that match this rule.
+  
+  If omitted, the compositor default is used. A value of `0` disables
+  borders. Positive values override the theme border width.
+
+  The value of this field should be a number.
+
+  The numbers should be integers.
+
+  The numbers should be greater than or equal to 0.
+
 - `initial-tile-state` (optional):
 
   Specifies if the window is initially mapped tiled or floating.

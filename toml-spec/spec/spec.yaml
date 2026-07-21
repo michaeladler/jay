@@ -4444,6 +4444,16 @@ WindowRule:
         
         If a window matches any rule for which this is false, the window will not be
         automatically focused.
+    border-width:
+      kind: number
+      integer_only: true
+      minimum: 0
+      required: false
+      description: |
+        The border width of newly mapped windows that match this rule.
+
+        If omitted, the compositor default is used. A value of `0` disables
+        borders. Positive values override the theme border width.
     initial-tile-state:
       ref: TileState
       required: false

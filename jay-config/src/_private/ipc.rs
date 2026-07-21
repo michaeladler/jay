@@ -748,6 +748,10 @@ pub enum ClientMessage<'a> {
         matcher: WindowMatcher,
         auto_focus: bool,
     },
+    SetWindowMatcherBorderWidth {
+        matcher: WindowMatcher,
+        border_width: Option<i32>,
+    },
     SetWindowMatcherInitialTileState {
         matcher: WindowMatcher,
         tile_state: TileState,

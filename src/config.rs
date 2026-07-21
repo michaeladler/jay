@@ -204,6 +204,10 @@ impl ConfigProxy {
         handler.auto_focus(data)
     }
 
+    pub fn border_width(&self, data: &ToplevelData) -> Option<i32> {
+        self.handler.get()?.border_width(data)
+    }
+
     pub fn initial_tile_state(&self, data: &ToplevelData) -> Option<TileState> {
         self.handler.get()?.initial_tile_state(data)
     }
@@ -287,6 +291,7 @@ impl ConfigProxy {
             window_matcher_leafs: Default::default(),
             window_matcher_std_kinds: state.tl_matcher_manager.kind(window::CLIENT_WINDOW),
             window_matcher_no_auto_focus: Default::default(),
+            window_matcher_border_width: Default::default(),
             window_matcher_initial_tile_state: Default::default(),
         });
         let init_msg = bincode_ops()

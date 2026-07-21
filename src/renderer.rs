@@ -650,7 +650,10 @@ impl Renderer<'_> {
         let th = theme.title_height(RenderTL);
         let tpuh = theme.title_plus_underline_height(RenderTL);
         let tuh = theme.title_underline_height(RenderTL);
-        let bw = theme.sizes.border_width.get(RenderTL);
+        let bw = self
+            .state
+            .border_width(child.tl_data())
+            .unwrap_or_else(|| theme.sizes.border_width.get(RenderTL));
         let bc = match ns.active.get() {
             true => theme.focused_border_color(),
             false => theme.colors.border.get(),
